@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Test extension",
+  "version": "1.2",
+  "description": "Попробуй увидеть всплывающее окно!",
+  "icons": {
+    "128": "128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.behance.net/*", 
+        "https://mir-s3-cdn-cf.behance.net/*"
+      ],
+      "js": [
+        "app.js"
+      ]
+    }
+  ]
+}
