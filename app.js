@@ -1,7 +1,20 @@
 console.log('Extend is ready!')
 
-let imgArr = document.querySelectorAll('img')
+let url = window.location.href
+urlIsChange(url)
+
+let imgArr = []
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
+
+getImgs()
+
+console.log(window.location.href)
+
+function getImgs(){
+  imgArr = document.querySelectorAll('img')
+  window.setTimeout(showArray, 2000)
+}
+
 
 function showArray () {
   imgArr = Array.from(imgArr).filter((el) => {
@@ -13,6 +26,7 @@ function showArray () {
     let btnSave = document.createElement('a')
     btnSave.setAttribute('href', imgArr[i].currentSrc)
     btnSave.addEventListener('click', function () { saveImage(imgArr[i].currentSrc) })
+    btnSave.style['background-color'] = '#ff0000bf'
     btnSave.classList.add('Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
     btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
       <div class="Btn-label-QJi e2e-Btn-label">Скачать</div>
@@ -36,5 +50,17 @@ function saveImage (url) {
   link.click()
 }
 
-window.setTimeout(showArray, 1000)
 
+
+function urlIsChange(currentUrl){
+  this.url = window.location.href
+  console.log('url is watching')
+  if (currentUrl == this.url) {
+    console.log('no change')
+    setTimeout(this.urlIsChange, 2000, this.url)
+  } else {
+    console.log('changed')
+    this.getImgs()
+    setTimeout(this.urlIsChange, 2000, this.url)
+  }
+}
