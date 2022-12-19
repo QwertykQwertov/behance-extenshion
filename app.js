@@ -60,7 +60,6 @@ function createBtn (src) {
   btnSave.setAttribute('target', '_blank')
   btnSave.addEventListener('click', function (e) { 
     e.stopPropagation()
-    saveImage(imgArr[i].currentSrc) 
   })
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
