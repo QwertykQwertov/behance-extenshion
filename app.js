@@ -1,4 +1,4 @@
-console.log('Extend is ready!')
+console.log('Extend for behance is ready!')
 
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 
@@ -31,7 +31,6 @@ function injectLink (imgArr) {
     } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {
       imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(saveButton)
     } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selelctor')) {
-      console.log("Includes")
       imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
     } else {
       if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {

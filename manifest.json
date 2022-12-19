@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Test extension",
-  "version": "1.2",
-  "description": "Попробуй увидеть всплывающее окно!",
+  "name": "Extension for Behance images",
+  "version": "2.1",
+  "description": "Скачивание невероятных картинок в максимально доступном разрешении с https://www.behance.net/ !",
   "icons": {
     "128": "128.png"
   },
