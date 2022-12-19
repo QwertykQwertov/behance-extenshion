@@ -79,6 +79,7 @@ function saveImage (url) {
   link.setAttribute('href', url)
   link.setAttribute('download', '')
   link.click()
+  window.close()
 }
 
 let refreshFunction = window.setInterval(getImgs, 3000)
