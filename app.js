@@ -26,20 +26,22 @@ function injectLink (imgArr) {
     // Вызов функции формирования кнопки
     const saveButton = createBtn(src)
 
-    if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {
+    if (imgArr[i].parentElement.classList.contains('project-lightbox-image-container') && !imgArr[i].parentElement.children[1]?.children[imgArr[i].parentElement.children[1]?.children.length - 1].classList?.contains('link-selelctor')) {
+      imgArr[i].parentElement.children[1]?.append(saveButton)
+    } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {
       imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(saveButton)
     } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selelctor')) {
+      console.log("Includes")
       imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
     } else {
       if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {
         imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.append(saveButton)
       }
     }
-    
   }
 }
 
-function getSrc({srcset}){
+function getSrc ({ srcset }) {
   srcset = srcset.split(',').filter(el => el != '')
   let src = srcset[srcset.length - 1]
   src = src.match(/https:\/\/\S+/)
