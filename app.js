@@ -1,10 +1,17 @@
 console.log('Extend for behance is ready!')
+let btnText = ''
+
+// Определение местоположения
+fetch("https://ipinfo.io/json").then(
+  (response) => response.json()
+).then(
+  (jsonResponse) => {
+    btnText = jsonResponse.country === 'RU' ? 'Скачать' : 'Download'
+    this.getImgs()
+  }
+)
 
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
-
-window.onload = () => {
-  this.getImgs()
-}
 
 function getImgs () {
   const imgArr = document.querySelectorAll('img')
@@ -50,6 +57,7 @@ function getSrc ({ srcset }) {
 function createBtn (src) {
   const btnSave = document.createElement('a')
   btnSave.setAttribute('href', src)
+  btnSave.setAttribute('target', '_blank')
   btnSave.addEventListener('click', function () { saveImage(imgArr[i].currentSrc) })
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
@@ -61,7 +69,7 @@ function createBtn (src) {
   }
   btnSave.classList.add('link-selelctor', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
-    <div class="Btn-label-QJi e2e-Btn-label">Скачать</div>
+    <div class="Btn-label-QJi e2e-Btn-label">${btnText}</div>
   </div>`
   return btnSave
 }
