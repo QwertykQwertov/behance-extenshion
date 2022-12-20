@@ -4,7 +4,7 @@
 
 ## How to use
 
-Turn on the extension and go to the site [behance](https://www.behance.net/). In the image you like, click on the "Download" button. Download will start automatically.
+Turn on the extension and go to the site [behance](https://www.behance.net/). In the image you like, click on the "Download" or "Скачать" button. Download will start automatically.
 
 ### Before
 
