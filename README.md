@@ -8,8 +8,8 @@ Turn on the extension and go to the site [behance](https://www.behance.net/). In
 
 ### Before
 
-![alt-текст](https://github.com/QwertykQwertov/behance-extension/before.png "With extension")
+![alt-текст](https://github.com/QwertykQwertov/behance-extenshion/blob/master/before.PNG "With extension")
 
 ### After
 
-![alt-текст](https://github.com/QwertykQwertov/behance-extension/after.png "Without extension")
+![alt-текст](https://github.com/QwertykQwertov/behance-extenshion/blob/master/after.PNG "Without extension")
