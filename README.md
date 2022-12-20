@@ -1,6 +1,6 @@
 # Behance-extension
 
-## It is a chrome extension that allows download images from [behance](https://www.behance.net/) with max screen resilution.
+## It is a chrome extension that allows download images from [behance](https://www.behance.net/) with max screen resolution.
 
 ## How to use
 
