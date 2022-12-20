@@ -29,6 +29,7 @@ function injectLink (imgArr) {
       clearTimeout(refreshFunction);
       return
     }
+    // Получаем src для будующей кнопки
     const src = getSrc(imgArr[i])
     // Вызов функции формирования кнопки
     const saveButton = createBtn(src)
