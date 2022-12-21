@@ -1,5 +1,5 @@
 console.log('Extend for behance is ready!')
-let btnText = ''
+let btnText = 'Download'
 
 // Определение местоположения
 fetch("https://ipinfo.io/json").then(
@@ -9,7 +9,7 @@ fetch("https://ipinfo.io/json").then(
     btnText = jsonResponse.country === 'RU' ? 'Скачать' : 'Download'
     this.getImgs()
   }
-)
+).catch(() => btnText = 'Download')
 
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 
@@ -59,7 +59,7 @@ function createBtn (src) {
   const btnSave = document.createElement('a')
   btnSave.setAttribute('href', src)
   btnSave.setAttribute('target', '_blank')
-  btnSave.addEventListener('click', function (e) { 
+  btnSave.addEventListener('click', function (e) {
     e.stopPropagation()
   })
   btnSave.style['background-color'] = '#ff0000'

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Extension for Behance images",
-  "version": "2.1",
+  "version": "2.1.1",
   "description": "Скачивание невероятных картинок в максимально доступном разрешении с https://www.behance.net/ !",
   "icons": {
     "128": "128.png"
