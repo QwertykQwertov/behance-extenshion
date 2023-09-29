@@ -56,11 +56,24 @@ function getSrc ({ srcset }) {
 }
 
 function createBtn (src) {
-  const btnSave = document.createElement('a')
-  btnSave.setAttribute('href', src)
-  btnSave.setAttribute('target', '_blank')
+  // const btnSave = document.createElement('a')
+  // btnSave.setAttribute('href', src)
+  // btnSave.setAttribute('target', '_blank')
+
+  const btnSave = document.createElement('button')
   btnSave.addEventListener('click', function (e) {
     e.stopPropagation()
+    fetch(src,{
+      method: 'GET',
+    }).then(res => res.blob())
+      .then(data => saveImg(data))
+    
+    function saveImg(blob){
+      let link = document.createElement("a");
+      link.setAttribute("href", URL.createObjectURL(blob));
+      link.setAttribute("download", Date.now());
+      link.click();
+    }
   })
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
@@ -77,12 +90,12 @@ function createBtn (src) {
   return btnSave
 }
 
-function saveImage (url) {
-  const link = document.createElement('a')
-  link.setAttribute('href', url)
-  link.setAttribute('download', '')
-  link.click()
-  window.close()
-}
+// function saveImage (url) {
+//   const link = document.createElement('a')
+//   link.setAttribute('href', url)
+//   link.setAttribute('download', '')
+//   link.click()
+//   window.close()
+// }
 
 let refreshFunction = window.setInterval(getImgs, 3000)
