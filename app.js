@@ -1,15 +1,13 @@
 console.log('Extend for behance is ready!')
 let btnText = 'Download'
 
-// Определение местоположения
-fetch("https://ipinfo.io/json").then(
-  (response) => response.json()
-).then(
-  (jsonResponse) => {
-    btnText = jsonResponse.country === 'RU' ? 'Скачать' : 'Download'
-    this.getImgs()
-  }
-).catch(() => btnText = 'Download')
+// Project-title-Q6Q - albums
+// Popover-activator-M8N Miniprofile-activator-dDq - author
+// Project-ownerName-A8O - or author parent
+
+window.addEventListener('load', () => {
+  console.log(window.navigator)
+})
 
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 
@@ -24,11 +22,11 @@ function injectLink (imgArr) {
   })
   for (let i = 0; i < imgArr.length; i++) {
     // Если корневой элемент body, скачиваем картинку и завершаем скрипт
-    if (imgArr[i].parentElement.nodeName === "BODY") {
-      saveImage(imgArr[i].currentSrc)
-      clearTimeout(refreshFunction);
-      return
-    }
+    // if (imgArr[i].parentElement.nodeName === "BODY") {
+    //   saveImage(imgArr[i].currentSrc)
+    //   clearTimeout(refreshFunction);
+    //   return
+    // }
     // Получаем src для будующей кнопки
     const src = getSrc(imgArr[i])
     // Вызов функции формирования кнопки
@@ -41,7 +39,7 @@ function injectLink (imgArr) {
     } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selelctor')) {
       imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
     } else {
-      if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {
+      if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
         imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.append(saveButton)
       }
     }
@@ -83,7 +81,7 @@ function createBtn (src) {
   btnSave.onmouseleave = function () {
     btnSave.style.opacity = "0.75";
   }
-  btnSave.classList.add('link-selelctor', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
+  btnSave.classList.add('link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
     <div class="Btn-label-QJi e2e-Btn-label">${btnText}</div>
   </div>`
