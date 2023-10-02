@@ -1,22 +1,22 @@
 console.log('Extend for behance is ready!')
+const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 let btnText = 'Download'
+let refreshFunction = null
 
 // Project-title-Q6Q - albums
 // Popover-activator-M8N Miniprofile-activator-dDq - author
 // Project-ownerName-A8O - or author parent
 
 window.addEventListener('load', () => {
-  console.log(window.navigator)
+  refreshFunction = window.setInterval(getImgs, 2000)
 })
 
-const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
-
-function getImgs () {
+function getImgs() {
   const imgArr = document.querySelectorAll('img')
   this.injectLink(imgArr)
 }
 
-function injectLink (imgArr) {
+function injectLink(imgArr) {
   imgArr = Array.from(imgArr).filter((el) => {
     return pattern.test(el.currentSrc)
   })
@@ -32,11 +32,11 @@ function injectLink (imgArr) {
     // Вызов функции формирования кнопки
     const saveButton = createBtn(src)
 
-    if (imgArr[i].parentElement.classList.contains('project-lightbox-image-container') && !imgArr[i].parentElement.children[1]?.children[imgArr[i].parentElement.children[1]?.children.length - 1].classList?.contains('link-selelctor')) {
+    if (imgArr[i].parentElement.classList.contains('project-lightbox-image-container') && !imgArr[i].parentElement.children[1]?.children[imgArr[i].parentElement.children[1]?.children.length - 1].classList?.contains('link-selector')) {
       imgArr[i].parentElement.children[1]?.append(saveButton)
-    } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selelctor')) {
+    } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
       imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(saveButton)
-    } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selelctor')) {
+    } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selector')) {
       imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
     } else {
       if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
@@ -46,14 +46,14 @@ function injectLink (imgArr) {
   }
 }
 
-function getSrc ({ srcset }) {
+function getSrc({ srcset }) {
   srcset = srcset.split(',').filter(el => el != '')
   let src = srcset[srcset.length - 1]
   src = src.match(/https:\/\/\S+/)
   return src[0]
 }
 
-function createBtn (src) {
+function createBtn(src) {
   // const btnSave = document.createElement('a')
   // btnSave.setAttribute('href', src)
   // btnSave.setAttribute('target', '_blank')
@@ -61,12 +61,12 @@ function createBtn (src) {
   const btnSave = document.createElement('button')
   btnSave.addEventListener('click', function (e) {
     e.stopPropagation()
-    fetch(src,{
+    fetch(src, {
       method: 'GET',
     }).then(res => res.blob())
       .then(data => saveImg(data))
-    
-    function saveImg(blob){
+
+    function saveImg(blob) {
       let link = document.createElement("a");
       link.setAttribute("href", URL.createObjectURL(blob));
       link.setAttribute("download", Date.now());
@@ -96,4 +96,4 @@ function createBtn (src) {
 //   window.close()
 // }
 
-let refreshFunction = window.setInterval(getImgs, 3000)
+
