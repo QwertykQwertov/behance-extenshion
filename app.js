@@ -1,19 +1,47 @@
 console.log('Extend for behance is ready!')
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
-let btnText = 'Download'
 let refreshFunction = null
 
+let os, browserLang, browser, author, album
 // Project-title-Q6Q - albums
 // Popover-activator-M8N Miniprofile-activator-dDq - author
 // Project-ownerName-A8O - or author parent
 
 window.addEventListener('load', () => {
-  refreshFunction = window.setInterval(getImgs, 2000)
+  refreshFunction = window.setInterval(getData, 1500)
+  const browserInfo = window.navigator
+  browserLang = browserInfo.language
+  browser = detectBrowser(browserInfo)
+  os = browserInfo.userAgentData.platform
 })
 
-function getImgs() {
+function detectBrowser(info) {
+  let result = 'Other';
+  if (info.userAgent.indexOf('YaBrowser') !== -1) {
+    result = 'Yandex Browser';
+  } else if (info.userAgent.indexOf('Firefox') !== -1) {
+    result = 'Mozilla Firefox';
+  } else if (info.userAgent.indexOf('Chrome') !== -1) {
+    result = 'Google Chrome';
+  } else if (info.userAgent.indexOf('MSIE') !== -1) {
+    result = 'Internet Exploder';
+  } else if (info.userAgent.indexOf('Edge') !== -1) {
+    result = 'Microsoft Edge';
+  } else if (info.userAgent.indexOf('Safari') !== -1) {
+    result = 'Safari';
+  } else if (info.userAgent.indexOf('Opera') !== -1) {
+    result = 'Opera';
+  }
+  return result;
+}
+
+function getData() {
   const imgArr = document.querySelectorAll('img')
-  this.injectLink(imgArr)
+  const authorBox = document.querySelector('.Project-ownerItems-qza')
+  author = authorBox.querySelector('.Popover-activator-M8N.Miniprofile-activator-dDq').children[0].textContent
+  album = document.querySelector('.Project-title-Q6Q').textContent
+
+  injectLink(imgArr)
 }
 
 function injectLink(imgArr) {
@@ -21,13 +49,7 @@ function injectLink(imgArr) {
     return pattern.test(el.currentSrc)
   })
   for (let i = 0; i < imgArr.length; i++) {
-    // Если корневой элемент body, скачиваем картинку и завершаем скрипт
-    // if (imgArr[i].parentElement.nodeName === "BODY") {
-    //   saveImage(imgArr[i].currentSrc)
-    //   clearTimeout(refreshFunction);
-    //   return
-    // }
-    // Получаем src для будующей кнопки
+    // Получаем src для кнопки
     const src = getSrc(imgArr[i])
     // Вызов функции формирования кнопки
     const saveButton = createBtn(src)
@@ -47,31 +69,23 @@ function injectLink(imgArr) {
 }
 
 function getSrc({ srcset }) {
-  srcset = srcset.split(',').filter(el => el != '')
-  let src = srcset[srcset.length - 1]
-  src = src.match(/https:\/\/\S+/)
-  return src[0]
+  src = srcset.split(',').findLast(el => el != '').match(/https:\/\/\S+/)[0]
+  srcStat = 'https://710ede90.artydev.ru/api/v1/process/'
+  return src
 }
 
 function createBtn(src) {
-  // const btnSave = document.createElement('a')
-  // btnSave.setAttribute('href', src)
-  // btnSave.setAttribute('target', '_blank')
-
   const btnSave = document.createElement('button')
   btnSave.addEventListener('click', function (e) {
     e.stopPropagation()
-    fetch(src, {
-      method: 'GET',
-    }).then(res => res.blob())
+    fetch(src).then(res => res.blob())
       .then(data => saveImg(data))
 
-    function saveImg(blob) {
-      let link = document.createElement("a");
-      link.setAttribute("href", URL.createObjectURL(blob));
-      link.setAttribute("download", Date.now());
-      link.click();
-    }
+    fetch(srcStat, {
+      method: 'POST',
+      body: JSON.stringify({ author, album, os, browser, browser_lang: browserLang })
+    }).then(res => res)
+      .catch(err => console.log(err))
   })
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
@@ -83,17 +97,14 @@ function createBtn(src) {
   }
   btnSave.classList.add('link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
-    <div class="Btn-label-QJi e2e-Btn-label">${btnText}</div>
+    <div class="Btn-label-QJi e2e-Btn-label">Download</div>
   </div>`
   return btnSave
 }
 
-// function saveImage (url) {
-//   const link = document.createElement('a')
-//   link.setAttribute('href', url)
-//   link.setAttribute('download', '')
-//   link.click()
-//   window.close()
-// }
-
-
+function saveImg(blob) {
+  let link = document.createElement("a");
+  link.setAttribute("href", URL.createObjectURL(blob));
+  link.setAttribute("download", Date.now());
+  link.click();
+}
