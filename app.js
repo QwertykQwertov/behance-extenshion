@@ -1,12 +1,9 @@
 console.log('Extend for behance is ready!')
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
+const srcStat = 'https://710ede90.artydev.ru/api/v1/process/'
 let refreshFunction = null
 
-let os, browserLang, browser, author, album
-// Project-title-Q6Q - albums
-// Popover-activator-M8N Miniprofile-activator-dDq - author
-// Project-ownerName-A8O - or author parent
-
+let os, browserLang, browser, authors, album, album_url
 window.addEventListener('load', () => {
   refreshFunction = window.setInterval(getData, 1500)
   const browserInfo = window.navigator
@@ -15,33 +12,21 @@ window.addEventListener('load', () => {
   os = browserInfo.userAgentData.platform
 })
 
-function detectBrowser(info) {
-  let result = 'Other';
-  if (info.userAgent.indexOf('YaBrowser') !== -1) {
-    result = 'Yandex Browser';
-  } else if (info.userAgent.indexOf('Firefox') !== -1) {
-    result = 'Mozilla Firefox';
-  } else if (info.userAgent.indexOf('Chrome') !== -1) {
-    result = 'Google Chrome';
-  } else if (info.userAgent.indexOf('MSIE') !== -1) {
-    result = 'Internet Exploder';
-  } else if (info.userAgent.indexOf('Edge') !== -1) {
-    result = 'Microsoft Edge';
-  } else if (info.userAgent.indexOf('Safari') !== -1) {
-    result = 'Safari';
-  } else if (info.userAgent.indexOf('Opera') !== -1) {
-    result = 'Opera';
-  }
-  return result;
-}
+
 
 function getData() {
   const imgArr = document.querySelectorAll('img')
-  const authorBox = document.querySelector('.Project-ownerItems-qza')
-  author = authorBox.querySelector('.Popover-activator-M8N.Miniprofile-activator-dDq').children[0].textContent
-  album = document.querySelector('.Project-title-Q6Q').textContent
-
-  injectLink(imgArr)
+  let infoScript = document.querySelector('[type="application/ld+json"]').innerText
+  if (infoScript) {
+    const info = JSON.parse(infoScript)
+    album = info.name
+    album_url = info.url
+    authors = info.creator.map(el => {
+      delete el['@type']
+      return el
+    })
+    injectLink(imgArr)
+  }
 }
 
 function injectLink(imgArr) {
@@ -70,23 +55,12 @@ function injectLink(imgArr) {
 
 function getSrc({ srcset }) {
   src = srcset.split(',').findLast(el => el != '').match(/https:\/\/\S+/)[0]
-  srcStat = 'https://710ede90.artydev.ru/api/v1/process/'
   return src
 }
 
 function createBtn(src) {
   const btnSave = document.createElement('button')
-  btnSave.addEventListener('click', function (e) {
-    e.stopPropagation()
-    fetch(src).then(res => res.blob())
-      .then(data => saveImg(data))
-
-    fetch(srcStat, {
-      method: 'POST',
-      body: JSON.stringify({ author, album, os, browser, browser_lang: browserLang })
-    }).then(res => res)
-      .catch(err => console.log(err))
-  })
+  btnSave.addEventListener('click', (e) => onClick(e, src))
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
   btnSave.onmouseover = function () {
@@ -95,16 +69,49 @@ function createBtn(src) {
   btnSave.onmouseleave = function () {
     btnSave.style.opacity = "0.75";
   }
-  btnSave.classList.add('link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
+  btnSave.classList.add('project-item-lightbox__action', 'link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
     <div class="Btn-label-QJi e2e-Btn-label">Download</div>
   </div>`
   return btnSave
 }
 
+function onClick(e, src) {
+  e.stopPropagation()
+  fetch(src).then(res => res.blob())
+    .then(data => saveImg(data))
+    .catch(err => console.log(err))
+
+  fetch(srcStat, {
+    method: 'POST',
+    body: JSON.stringify({ authors, album, album_url, img_url: src, os, browser, browser_lang: browserLang })
+  }).then(res => res)
+    .catch(err => console.log(err))
+}
+
 function saveImg(blob) {
   let link = document.createElement("a");
   link.setAttribute("href", URL.createObjectURL(blob));
-  link.setAttribute("download", Date.now());
+  link.setAttribute("download", `${album}_${Date.now()}`);
   link.click();
+}
+
+function detectBrowser(info) {
+  let result = 'Other';
+  if (info.userAgent.indexOf('YaBrowser') !== -1) {
+    result = 'Yandex Browser';
+  } else if (info.userAgent.indexOf('Firefox') !== -1) {
+    result = 'Mozilla Firefox';
+  } else if (info.userAgent.indexOf('Chrome') !== -1) {
+    result = 'Google Chrome';
+  } else if (info.userAgent.indexOf('MSIE') !== -1) {
+    result = 'Internet Exploder';
+  } else if (info.userAgent.indexOf('Edge') !== -1) {
+    result = 'Microsoft Edge';
+  } else if (info.userAgent.indexOf('Safari') !== -1) {
+    result = 'Safari';
+  } else if (info.userAgent.indexOf('Opera') !== -1) {
+    result = 'Opera';
+  }
+  return result;
 }

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Extension for Behance images",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "Скачивание невероятных картинок в максимально доступном разрешении с https://www.behance.net/ !",
   "icons": {
     "128": "128.png"
@@ -9,8 +9,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.behance.net/*", 
-        "https://mir-s3-cdn-cf.behance.net/*"
+        "https://www.behance.net/*"
       ],
       "js": [
         "app.js"
