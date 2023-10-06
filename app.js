@@ -12,19 +12,25 @@ window.addEventListener('load', () => {
   os = browserInfo.userAgentData.platform
 })
 
-
-
 function getData() {
   const imgArr = document.querySelectorAll('img')
   let infoScript = document.querySelector('[type="application/ld+json"]')
   if (infoScript) {
     const info = JSON.parse(infoScript.innerText)
-    album = info.name
-    album_url = info.url
-    authors = info.creator.map(el => {
-      delete el['@type']
-      return el
-    })
+    if (info['@type'] === 'Person') {
+      album = document.querySelector('.Project-title-Q6Q')
+      if (!album) return
+      album = album.textContent
+      album_url = window.location.href
+      authors = [{ identifier: info.identifier, name: info.name, url: info.url }]
+    } else {
+      album = info.name
+      album_url = info.url
+      authors = info.creator.map(el => {
+        delete el['@type']
+        return el
+      })
+    }
     injectLink(imgArr)
   }
 }
