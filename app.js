@@ -16,9 +16,9 @@ window.addEventListener('load', () => {
 
 function getData() {
   const imgArr = document.querySelectorAll('img')
-  let infoScript = document.querySelector('[type="application/ld+json"]').innerText
+  let infoScript = document.querySelector('[type="application/ld+json"]')
   if (infoScript) {
-    const info = JSON.parse(infoScript)
+    const info = JSON.parse(infoScript.innerText)
     album = info.name
     album_url = info.url
     authors = info.creator.map(el => {
@@ -84,6 +84,7 @@ function onClick(e, src) {
 
   fetch(srcStat, {
     method: 'POST',
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ authors, album, album_url, img_url: src, os, browser, browser_lang: browserLang })
   }).then(res => res)
     .catch(err => console.log(err))
