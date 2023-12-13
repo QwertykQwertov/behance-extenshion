@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Extension for Behance images",
+  "name": "Extension for Behance images (Behance saver)",
   "version": "2.2.1",
   "description": "Скачивание невероятных картинок в максимально доступном разрешении с https://www.behance.net/ !",
   "icons": {

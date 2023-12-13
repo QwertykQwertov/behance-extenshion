@@ -1,11 +1,13 @@
-console.log('Extend for behance is ready!')
+// console.log('Extend for behance is ready!')
+console.log('[TEST]')
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 const srcStat = 'https://710ede90.artydev.ru/api/v1/process/'
 let refreshFunction = null
 
 let os, browserLang, browser, authors, album, album_url
 window.addEventListener('load', () => {
-  refreshFunction = window.setInterval(getData, 1500)
+  refreshFunction = window.setInterval(getData, 3000)
+  // getData()
   const browserInfo = window.navigator
   browserLang = browserInfo.language
   browser = detectBrowser(browserInfo)
@@ -30,32 +32,71 @@ function getData() {
 }
 
 function injectLink(imgArr) {
-  imgArr = Array.from(imgArr).filter((el) => {
-    return pattern.test(el.currentSrc)
-  })
+
+  // console.log('[findElements]', imgArr)
+  // imgArr = Array.from(imgArr).map((el) => {
+  // return el.childNodes[1]
+  // return pattern.test(el.currentSrc)
+  // })
+
+  // console.log('imgArr', imgArr)
   for (let i = 0; i < imgArr.length; i++) {
     // Получаем src для кнопки
     const src = getSrc(imgArr[i])
+    // console.log('[src]', src)
     // Вызов функции формирования кнопки
     const saveButton = createBtn(src)
+    try {
+      if (imgArr[i].closest('.js-project-lightbox-link')) {
+        const parent = imgArr[i].closest('.js-project-lightbox-link')
+        const btnGroup = parent.querySelector('.project-module__actions-container')
+        // console.log('[btn group]', btnGroup)
 
-    if (imgArr[i].parentElement.classList.contains('project-lightbox-image-container') && !imgArr[i].parentElement.children[1]?.children[imgArr[i].parentElement.children[1]?.children.length - 1].classList?.contains('link-selector')) {
-      imgArr[i].parentElement.children[1]?.append(saveButton)
-    } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
-      imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(saveButton)
-    } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selector')) {
-      imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
-    } else {
-      if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
-        imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.append(saveButton)
+        if (!btnGroup.classList.contains('save-btn-appended')) {
+          btnGroup.classList.add('save-btn-appended')
+          btnGroup.append(saveButton)
+        }
+      } else if (imgArr[i].classList.contains('grid__item-image')) {
+        console.log('[grid item image]')
+        if (!imgArr[i].parentElement.contains('save-btn-appended')) {
+          imgArr[i].parentElement.classList.add('save-btn-appended')
+          const btnGroup = imgArr[i].parentElement.querySelector('.project-module__action')
+          console.log('[seqrch is ok]', btnGroup)
+          btnGroup.append(saveButton)
+        }
       }
+    } catch {
+
     }
+
+    // if (imgArr[i].parentElement.classList.contains('project-lightbox-image-container') && !imgArr[i].parentElement.children[1]?.children[imgArr[i].parentElement.children[1]?.children.length - 1].classList?.contains('link-selector')) {
+    //   imgArr[i].parentElement.children[1]?.append(saveButton)
+    // } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
+    //   imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(saveButton)
+    // } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selector')) {
+    //   imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
+    // } else {
+    //   if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
+    //     imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.append(saveButton)
+    //   }
+    // }
   }
 }
 
-function getSrc({ srcset }) {
-  src = srcset.split(',').findLast(el => el != '').match(/https:\/\/\S+/)[0]
-  return src
+function getSrc(img) {
+  // console.log('[ src set ]', srcset)
+  let src
+  // console.log('[img]', img)
+  try {
+    if (!img.srcset) {
+      src = img.childNodes[1].srcset.split(',').findLast(el => el != '').match(/https:\/\/\S+/)[0]
+    } else {
+      src = img.srcset.split(',').findLast(el => el != '').match(/https:\/\/\S+/)[0]
+    }
+    return src
+  } catch {
+    // console.log('invalid image')
+  }
 }
 
 function createBtn(src) {
