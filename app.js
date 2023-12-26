@@ -47,21 +47,21 @@ function injectLink(imgArr) {
     // Вызов функции формирования кнопки
     const saveButton = createBtn(src)
     try {
-      if (imgArr[i].closest('.js-project-lightbox-link')) {
+      if (imgArr[i].classList.contains('grid__item-image')) {
+        console.log('[grid item image]')
+        if (!imgArr[i].parentElement.contains('save-btn-appended')) {
+          imgArr[i].parentElement.classList.add('save-btn-appended')
+          const btnGroup = imgArr[i].parentElement.querySelector('.project-module__action')
+          console.log('[seqrch is ok]', btnGroup)
+          btnGroup.append(saveButton)
+        }
+      } else if (imgArr[i].closest('.js-project-lightbox-link')) {
         const parent = imgArr[i].closest('.js-project-lightbox-link')
         const btnGroup = parent.querySelector('.project-module__actions-container')
         // console.log('[btn group]', btnGroup)
 
         if (!btnGroup.classList.contains('save-btn-appended')) {
           btnGroup.classList.add('save-btn-appended')
-          btnGroup.append(saveButton)
-        }
-      } else if (imgArr[i].classList.contains('grid__item-image')) {
-        console.log('[grid item image]')
-        if (!imgArr[i].parentElement.contains('save-btn-appended')) {
-          imgArr[i].parentElement.classList.add('save-btn-appended')
-          const btnGroup = imgArr[i].parentElement.querySelector('.project-module__action')
-          console.log('[seqrch is ok]', btnGroup)
           btnGroup.append(saveButton)
         }
       }
