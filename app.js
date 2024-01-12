@@ -11,6 +11,7 @@ window.addEventListener('load', () => {
   browser = detectBrowser(browserInfo)
   os = browserInfo.userAgentData.platform
   addToastInDOM()
+  console.log(browserInfo)
 })
 
 function getData() {
@@ -142,14 +143,15 @@ function convertImage(e, src) {
         new ClipboardItem({ 'image/png': imgBlob })
       ]
     ).then(e => {
-      showToast()
+      showToast('success')
       console.log('Image copied to clipboard')
     })
-      .catch(e => { console.log(e) })
+      .catch(e => {
+        showToast('error')
+        console.log(e)
+      })
   })
 }
-
-
 
 
 
@@ -189,17 +191,16 @@ function addToastInDOM() {
   document.body.append(toast)
 }
 
-function showToast() {
+function showToast(type) {
   // Находим контейнер с сообщением
   const toast = document.getElementById("snackbar");
-  toast.textContent = 'Изображение успешно скопировано'
+  toast.textContent = type == 'success' ? 'Изображение успешно скопировано' : 'Произошла ошибка, попробуйте снова'
 
   // Добавляем контейнеру класс "show"
-  toast.classList.add('show')
-console.log('SHOW', toast)
+  toast.classList.add('show', `toast-${type}`)
   // Через 3 секунды удаляем класс "show" у контейнера с сообщением
   setTimeout(function () {
-    toast.classList.remove('show')
+    toast.classList.remove('show', `toast-${type}`)
   }, 3000);
 }
 

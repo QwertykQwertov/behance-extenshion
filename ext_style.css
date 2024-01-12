@@ -1,22 +1,46 @@
 /* Положение сообщения в низу и посередине экрана */
 #snackbar {
-  visibility: hidden; /* По умолчанию скрыто. Показывается по нажатию на кнопку */
-  min-width: 250px; /* Минимальная ширина */
-  margin-left: -125px; /* Значение min-width деленное на 2 */
-  background-color: #333; /* Черный фон */
-  color: #fff; /* Белый текст */
-  text-align: center; /* Текст по центру */
-  border-radius: 2px; /* Закругленные края */
-  padding: 16px; /* Отступы */
-  position: fixed; /* Всегда на экране */
-  z-index: 100; /* Добавим z-index, если нужно */
-  left: 50%; /* Сообщение по центру */
-  bottom: 30px; /* 30px от низа экрана */
+  visibility: hidden;
+  /* По умолчанию скрыто. Показывается по нажатию на кнопку */
+  min-width: 250px;
+  /* Минимальная ширина */
+  margin-left: -125px;
+  /* Значение min-width деленное на 2 */
+  /*background-color: #333; /* Черный фон */
+  color: #fff;
+  /* Белый текст */
+  text-align: center;
+  /* Текст по центру */
+  border-radius: 5px;
+  /* Закругленные края */
+  padding: 16px;
+  /* Отступы */
+  position: fixed;
+  /* Всегда на экране */
+  z-index: 999;
+  /* Добавим z-index, если нужно */
+  left: 50%;
+  /* Сообщение по центру */
+  bottom: 30px;
+  /* 30px от низа экрана */
+}
+
+.toast-success {
+  background: #45e045;
+}
+
+.toast-error {
+  background-color: #ff3131;
+}
+
+.toast-warning {
+  background-color: #d6d634;
 }
 
 /* Показываем сообщение при нажатии на кнопку (добавляется JavaScript) */
 #snackbar.show {
-  visibility: visible; /* Показать сообщение */
+  visibility: visible;
+  /* Показать сообщение */
   /* Добавляем анимацию: Отведем 0.5 сек. на появление и исчезание сообщения.
   При этом задержка процесса исчезания составит 2.5 сек */
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -25,21 +49,49 @@
 
 /* Анимация появления и исчезания сообщения */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }

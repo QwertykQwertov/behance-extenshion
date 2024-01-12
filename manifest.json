@@ -19,5 +19,8 @@
       ]
     }
   ],
+  "action": {
+    "default_popup": "popup.html"
+  },
   "author": "qwertykqwertov@mail.ru"
 }
