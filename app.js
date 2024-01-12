@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
   browserLang = browserInfo.language
   browser = detectBrowser(browserInfo)
   os = browserInfo.userAgentData.platform
+  addToastInDOM()
 })
 
 function getData() {
@@ -43,17 +44,22 @@ function injectLink(imgArr) {
     // Получаем src для кнопки
     const src = getSrc(imgArr[i])
     // Вызов функции формирования кнопки
-    const saveButton = createBtn(src)
+    const saveButton = createBtn(src, 'Download')
+    const copyButton = createBtn(src, 'Copy')
 
     if (imgArr[i].parentElement.classList.contains('project-lightbox-image-container') && !imgArr[i].parentElement.children[1]?.children[imgArr[i].parentElement.children[1]?.children.length - 1].classList?.contains('link-selector')) {
       imgArr[i].parentElement.children[1]?.append(saveButton)
+      imgArr[i].parentElement.children[1]?.append(copyButton)
     } else if (imgArr[i].parentElement.classList.contains('ImageElement-root-kir') && !imgArr[i].parentElement.parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
       imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(saveButton)
+      imgArr[i].parentElement.parentElement?.children[2]?.children[0]?.children[0]?.append(copyButton)
     } else if (imgArr[i].classList?.contains('grid__item-image') && !imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1]?.lastChild?.classList?.contains('link-selector')) {
       imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(saveButton)
+      imgArr[i].parentElement.children[imgArr[i].parentElement.children.length - 1].append(copyButton)
     } else {
       if (!imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.lastChild?.classList?.contains('link-selector')) {
         imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.append(saveButton)
+        imgArr[i].parentElement.children[2]?.children[0]?.children[0]?.append(copyButton)
       }
     }
   }
@@ -64,9 +70,10 @@ function getSrc({ srcset }) {
   return src
 }
 
-function createBtn(src) {
+// Кнопка сохранения
+function createBtn(src, type) {
   const btnSave = document.createElement('button')
-  btnSave.addEventListener('click', (e) => onClick(e, src))
+  btnSave.addEventListener('click', (e) => type === 'Download' ? onClickSave(e, src) : convertImage(e, src))
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
   btnSave.onmouseover = function () {
@@ -77,12 +84,12 @@ function createBtn(src) {
   }
   btnSave.classList.add('project-item-lightbox__action', 'link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
-    <div class="Btn-label-QJi e2e-Btn-label">Download</div>
+    <div class="Btn-label-QJi e2e-Btn-label">${type}</div>
   </div>`
   return btnSave
 }
 
-function onClick(e, src) {
+function onClickSave(e, src) {
   e.stopPropagation()
   fetch(src).then(res => res.blob())
     .then(data => saveImg(data))
@@ -95,6 +102,58 @@ function onClick(e, src) {
   }).then(res => res)
     .catch(err => console.log(err))
 }
+
+function onClickCopy(e, src) {
+  e.stopPropagation()
+  fetch(src).then(res => res.blob())
+    .then((blob) => {
+      navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob
+        })
+      ]);
+      console.log('Image copied.');
+    })
+    .catch(err => console.log(err))
+}
+
+function convertImage(e, src) {
+  e.stopPropagation()
+  const img = new Image
+  const c = document.createElement('canvas')
+  const ctx = c.getContext('2d')
+
+  function setCanvasImage(path, func) {
+    img.onload = function () {
+      c.width = this.naturalWidth
+      c.height = this.naturalHeight
+      ctx.drawImage(this, 0, 0)
+      c.toBlob(blob => {
+        func(blob)
+      }, 'image/png')
+    }
+    img.setAttribute('crossorigin', 'anonymous')
+    img.src = path
+  }
+
+  setCanvasImage(src, (imgBlob) => {
+    navigator.clipboard.write(
+      [
+        new ClipboardItem({ 'image/png': imgBlob })
+      ]
+    ).then(e => {
+      showToast()
+      console.log('Image copied to clipboard')
+    })
+      .catch(e => { console.log(e) })
+  })
+}
+
+
+
+
+
+
 
 function saveImg(blob) {
   let link = document.createElement("a");
@@ -122,3 +181,44 @@ function detectBrowser(info) {
   }
   return result;
 }
+
+function addToastInDOM() {
+
+  const toast = document.createElement('div')
+  toast.id = 'snackbar'
+  document.body.append(toast)
+}
+
+function showToast() {
+  // Находим контейнер с сообщением
+  const toast = document.getElementById("snackbar");
+  toast.textContent = 'Изображение успешно скопировано'
+
+  // Добавляем контейнеру класс "show"
+  toast.classList.add('show')
+console.log('SHOW', toast)
+  // Через 3 секунды удаляем класс "show" у контейнера с сообщением
+  setTimeout(function () {
+    toast.classList.remove('show')
+  }, 3000);
+}
+
+// const img = 'https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/b6af5a188430523.659c31a5b992b.png'
+
+// async function copyPicture(src) {
+//   try {
+//     const response = await fetch(src);
+//     const blob = await response.blob();
+//     await navigator.clipboard.write([
+//       new ClipboardItem({
+//         [blob.type]: blob
+//       })
+//     ]);
+//     console.log('Image copied.');
+//   } catch (err) {
+//     console.error(err.name, err.message);
+//   }
+// }
+// const btn = document.getElementById('test')
+// console.log(btn)
+// btn.addEventListener('click', () => copyPicture(img))

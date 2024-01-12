@@ -13,6 +13,9 @@
       ],
       "js": [
         "app.js"
+      ],
+      "css": [
+        "ext_style.css"
       ]
     }
   ],
