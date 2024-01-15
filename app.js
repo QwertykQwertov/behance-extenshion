@@ -11,7 +11,10 @@ window.addEventListener('load', () => {
   browser = detectBrowser(browserInfo)
   os = browserInfo.userAgentData.platform
   addToastInDOM()
-  console.log(browserInfo)
+})
+
+chrome.storage.sync.get(["isRunExt"]).then((data) => {
+  console.log('[storage]', data)
 })
 
 function getData() {

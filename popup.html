@@ -9,10 +9,19 @@
 </head>
 
 <body class="popup">
-  <img src="./stay_hydrated.png" id="hydrateImage">
-  <button id="cancelAlarm">Вкл/выкл</button>
-  <button id="sampleSecond" value="0.1">Отблагодарить разработчика</button>
-  <button id="min15" value="15">Ознакомиться со статистикой</button>
+  <img src="./logo.png" id="hydrateImage">
+  <div>
+    <label class="switch">
+      <input type="checkbox" id="toggle">
+      <span class="slider round"></span>
+    </label>
+  </div>
+  <div>
+    <button id="donat" class="popup-button">Отблагодарить разработчика</button>
+  </div>
+  <div>
+    <button id="statistic" class="popup-button">Ознакомиться со статистикой</button>
+  </div>
   <script src="popup.js"></script>
 </body>
 
