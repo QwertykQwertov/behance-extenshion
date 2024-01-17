@@ -1,36 +1,39 @@
 console.log('popup.js')
+const ruNames = ['Вкл/Выкл', 'На кофе', 'Оценить', 'Статистика']
 
 window.onload = () => {
-  let buttonPower = document.querySelector('#toggle')
-  let buttonDonat = document.querySelector('#donat')
-  let buttonStatistic = document.querySelector('#statistic')
+  const label = document.querySelector('#label')
+  const buttonPower = document.querySelector('#toggle')
+  const buttonDonat = document.querySelector('#donat')
+  const buttonStar = document.querySelector('#star')
+  const buttonStatistic = document.querySelector('#statistic')
 
-  buttonPower.addEventListener('click', changeState)
-  buttonDonat.addEventListener('click', goToDonat)
-  buttonStatistic.addEventListener('click', goToStatistic)
+  checkLanguage([label, buttonDonat, buttonStar, buttonStatistic])
+
+  buttonPower.addEventListener('change', changeState)
+  buttonDonat.addEventListener('click', () => goTo('https://pay.cloudtips.ru/p/108a3cf6'))
+  buttonStar.addEventListener('click', () => goTo('https://chromewebstore.google.com/detail/behance-saver/pcgmjcfekkppafhcjbpajfgakmlmnbfn'))
+  buttonStatistic.addEventListener('click', () => goTo('https://sbehance.ikolesov.space/'))
+
+  initialState(buttonPower)
 }
 
 function changeState() {
-  const appState = buttonPower.getAttribute("aria-checked")
-  // localStorage.setItem('isRunExt', 'appState')
-  chrome.storage.sync.set({isRunExt: true})
+  chrome.storage.sync.set({ isRunExt: this.checked })
 }
 
-function goToDonat() {
-  window.open('https://pay.cloudtips.ru/p/108a3cf6', '_blank');
-  localStorage.setItem('isRunExt', 'appState')
-  chrome.storage.sync.set({isRunExt: true})
+function initialState(button) {
+  chrome.storage.sync.get(["isRunExt"]).then(stor => (stor.isRunExt || typeof stor.isRunExt === "undefined") ? button.checked = true : button.checked = false)
 }
 
-function goToStatistic() {
-  window.open('https://sbehance.ikolesov.space/', '_blank');
+function goTo(path) {
+  window.open(path, '_blank');
 }
 
-function disable_ext() {
-  const id = chrome.runtime.id;
-  chrome.management.get(id, function (ex) {
-    if (ex.enabled) {
-      chrome.management.setEnabled(id, false);
-    }
+function checkLanguage(buttons) {
+  if (!/en/.test(window.navigator.language)) return
+
+  buttons.forEach((el, i) => {
+    el.textContent = ruNames[i]
   });
 }

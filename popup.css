@@ -1,12 +1,46 @@
+body {
+  /* background-color: #88C3C9; */
+  /* background-color: rgb(84 105 212); */
+  /* background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%); */
+  /* background-image: linear-gradient(to bottom, #a8edea 0%, #fed6e3 100%); */
+  margin: 0;
+}
+
 .popup {
-  background-color: rgb(222, 181, 121);
+  /* background-color: rgb(41 57 31); */
+  /* background-color: #98a2c0; */
+  /* background-color: #edeff4; */
   width: 300px;
   height: 600%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding-bottom: 50px;
+  padding: 50px 0;
+  margin: 0;
+  box-sizing: border-box;
+
+  /* background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%); */
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+}
+
+.option-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+
+  /* background-color: rgb(84, 105, 212);
+  border-radius: 5px;
+  width: 200px;
+  padding: 5px 0; */
+}
+
+.custom-label {
+  color: #5868cd;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
 }
 
 /* The switch - the box around the slider */
@@ -32,7 +66,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  /* background-color: #ccc; */
+  background-color: #ed3b3b;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -50,11 +85,13 @@
 }
 
 input:checked+.slider {
-  background-color: rgb(84 105 212);
+  /* background-color: rgb(84 105 212); */
+  background-color: rgb(90, 229, 62);
 }
 
 input:focus+.slider {
-  box-shadow: 0 0 1px rgb(84 105 212);
+  /* box-shadow: 0 0 1px rgb(84 105 212); */
+  background-color: 0 0 1px rgb(90, 229, 62);
 }
 
 input:checked+.slider:before {
@@ -86,6 +123,7 @@ input:checked+.slider:before {
   padding: 4px 8px;
   display: inline-block;
   min-height: 28px;
+  width: 200px;
   transition: background-color .24s, box-shadow .24s;
   text-decoration: none;
 }

@@ -8,19 +8,25 @@
   <title>Document</title>
 </head>
 
-<body class="popup">
-  <img src="./logo.png" id="hydrateImage">
-  <div>
-    <label class="switch">
-      <input type="checkbox" id="toggle">
-      <span class="slider round"></span>
-    </label>
-  </div>
-  <div>
-    <button id="donat" class="popup-button">Отблагодарить разработчика</button>
-  </div>
-  <div>
-    <button id="statistic" class="popup-button">Ознакомиться со статистикой</button>
+<body>
+  <div class="popup">
+    <img src="./logo.png" id="hydrateImage">
+    <div class="option-wrapper">
+      <p class="custom-label" id="label">On/Off</p>
+      <label class="switch">
+        <input type="checkbox" id="toggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div>
+      <button id="donat" class="popup-button">Donate</button>
+    </div>
+    <div>
+      <button id="star" class="popup-button">Rate the App</button>
+    </div>
+    <div>
+      <button id="statistic" class="popup-button">Statistics</button>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>

@@ -19,6 +19,16 @@
       ]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "logo.png",
+        "copy.png",
+        "dwnld.png"
+      ],
+      "matches": ["https://www.behance.net/*"]
+    }
+  ],
   "action": {
     "default_popup": "popup.html"
   },

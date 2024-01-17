@@ -2,10 +2,12 @@ console.log('Extend for behance is ready!')
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 const srcStat = 'https://710ede90.artydev.ru/api/v1/process/'
 let refreshFunction = null
+let isRun
+const appLanguage = /ru/.test(window.navigator.language) ? 'ru' : 'en'
 
 let os, browserLang, browser, authors, album, album_url
 window.addEventListener('load', () => {
-  refreshFunction = window.setInterval(getData, 1500)
+  refreshFunction = window.setInterval(checkIsRun, 1500)
   const browserInfo = window.navigator
   browserLang = browserInfo.language
   browser = detectBrowser(browserInfo)
@@ -13,9 +15,18 @@ window.addEventListener('load', () => {
   addToastInDOM()
 })
 
-chrome.storage.sync.get(["isRunExt"]).then((data) => {
-  console.log('[storage]', data)
-})
+
+// chrome.storage.sync.clear()
+function checkIsRun() {
+  // Проверяем, запущено ли приложение в popup
+  chrome.storage.sync.get(["isRunExt"]).then((data) => {
+    console.log(data.isRunExt)
+    if (data.isRunExt === false) {
+      return
+    }
+    getData()
+  })
+}
 
 function getData() {
   const imgArr = document.querySelectorAll('img')
@@ -76,7 +87,9 @@ function getSrc({ srcset }) {
 
 // Кнопка сохранения
 function createBtn(src, type) {
+  const iconPath = (type === 'Download') ? 'https://img.icons8.com/?size=26&id=365&format=png' : 'https://img.icons8.com/?size=256&id=59773&format=png'
   const btnSave = document.createElement('button')
+
   btnSave.addEventListener('click', (e) => type === 'Download' ? onClickSave(e, src) : convertImage(e, src))
   btnSave.style['background-color'] = '#ff0000'
   btnSave.style.opacity = '0.75'
@@ -88,7 +101,7 @@ function createBtn(src, type) {
   }
   btnSave.classList.add('project-item-lightbox__action', 'link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
-    <div class="Btn-label-QJi e2e-Btn-label">${type}</div>
+    <div class="Btn-label-QJi e2e-Btn-label"><img class="ext-icon"src=${iconPath}></div>  
   </div>`
   return btnSave
 }
@@ -116,7 +129,6 @@ function onClickCopy(e, src) {
           [blob.type]: blob
         })
       ]);
-      console.log('Image copied.');
     })
     .catch(err => console.log(err))
 }
@@ -147,7 +159,6 @@ function convertImage(e, src) {
       ]
     ).then(e => {
       showToast('success')
-      console.log('Image copied to clipboard')
     })
       .catch(e => {
         showToast('error')
@@ -155,10 +166,6 @@ function convertImage(e, src) {
       })
   })
 }
-
-
-
-
 
 function saveImg(blob) {
   let link = document.createElement("a");
@@ -195,9 +202,20 @@ function addToastInDOM() {
 }
 
 function showToast(type) {
+  const message = {
+    success: {
+      ru: 'Изображение успешно скопировано',
+      en: 'Image copied successfully'
+    },
+    error: {
+      ru: 'Произошла ошибка, попробуйте снова',
+      en: 'Something went wrong, try again'
+    }
+  }
+
   // Находим контейнер с сообщением
   const toast = document.getElementById("snackbar");
-  toast.textContent = type == 'success' ? 'Изображение успешно скопировано' : 'Произошла ошибка, попробуйте снова'
+  toast.textContent = message[type][appLanguage]
 
   // Добавляем контейнеру класс "show"
   toast.classList.add('show', `toast-${type}`)
@@ -206,23 +224,3 @@ function showToast(type) {
     toast.classList.remove('show', `toast-${type}`)
   }, 3000);
 }
-
-// const img = 'https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/b6af5a188430523.659c31a5b992b.png'
-
-// async function copyPicture(src) {
-//   try {
-//     const response = await fetch(src);
-//     const blob = await response.blob();
-//     await navigator.clipboard.write([
-//       new ClipboardItem({
-//         [blob.type]: blob
-//       })
-//     ]);
-//     console.log('Image copied.');
-//   } catch (err) {
-//     console.error(err.name, err.message);
-//   }
-// }
-// const btn = document.getElementById('test')
-// console.log(btn)
-// btn.addEventListener('click', () => copyPicture(img))
