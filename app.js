@@ -1,4 +1,3 @@
-console.log('Extend for behance is ready!')
 const pattern = /\bhttps:\/\/mir-s3-cdn-cf.behance.net\/project_modules\//
 const srcStat = 'https://710ede90.artydev.ru/api/v1/process/'
 let refreshFunction = null
@@ -7,6 +6,7 @@ const appLanguage = /ru/.test(window.navigator.language) ? 'ru' : 'en'
 
 let os, browserLang, browser, authors, album, album_url
 window.addEventListener('load', () => {
+  checkIsRun()
   refreshFunction = window.setInterval(checkIsRun, 1500)
   const browserInfo = window.navigator
   browserLang = browserInfo.language
@@ -15,12 +15,9 @@ window.addEventListener('load', () => {
   addToastInDOM()
 })
 
-
-// chrome.storage.sync.clear()
 function checkIsRun() {
   // Проверяем, запущено ли приложение в popup
   chrome.storage.sync.get(["isRunExt"]).then((data) => {
-    console.log(data.isRunExt)
     if (data.isRunExt === false) {
       return
     }
@@ -30,10 +27,12 @@ function checkIsRun() {
 
 function getData() {
   const imgArr = document.querySelectorAll('img')
+  console.log(imgArr)
   let infoScript = document.querySelector('[type="application/ld+json"]')
   if (infoScript) {
     const info = JSON.parse(infoScript.innerText)
     if (info['@type'] === 'Person') {
+      console.log('if')
       album = document.querySelector('.Project-title-Q6Q')
       if (!album) return
       album = album.textContent
@@ -47,11 +46,18 @@ function getData() {
         return el
       })
     }
+    console.log('work')
     injectLink(imgArr)
+  } else if (window.location.host === "mir-s3-cdn-cf.behance.net") {
+    // Если открылось окно этого поддомена, то качаем изображение
+    createLink(imgArr[0].currentSrc, '_blank')
+    window.close()
+    return
   }
 }
 
 function injectLink(imgArr) {
+  console.log('inject', imgArr)
   imgArr = Array.from(imgArr).filter((el) => {
     return pattern.test(el.currentSrc)
   })
@@ -87,7 +93,7 @@ function getSrc({ srcset }) {
 
 // Кнопка сохранения
 function createBtn(src, type) {
-  const iconPath = (type === 'Download') ? 'https://img.icons8.com/?size=26&id=365&format=png' : 'https://img.icons8.com/?size=256&id=59773&format=png'
+  const iconPath = (type === 'Download') ? 'https://img.icons8.com/metro/26/000000/download.png' : 'https://img.icons8.com/ios-glyphs/30/copy.png'
   const btnSave = document.createElement('button')
 
   btnSave.addEventListener('click', (e) => type === 'Download' ? onClickSave(e, src) : convertImage(e, src))
@@ -99,6 +105,7 @@ function createBtn(src, type) {
   btnSave.onmouseleave = function () {
     btnSave.style.opacity = "0.75";
   }
+  if (type !== 'Download') type = ''
   btnSave.classList.add('project-item-lightbox__action', 'link-selector', 'Btn-button-CqT', 'Btn-inverted-GDL', 'Btn-normal-If5', 'Btn-shouldBlur-ZHs', 'Actions-moduleAction-pY1', 'Actions-moduleActionLink-ur1')
   btnSave.innerHTML = `<div class="Btn-labelWrapper-_Re">
     <div class="Btn-label-QJi e2e-Btn-label"><img class="ext-icon"src=${iconPath}></div>  
@@ -106,11 +113,23 @@ function createBtn(src, type) {
   return btnSave
 }
 
+function createLink(url, target) {
+  const link = document.createElement('a')
+  link.setAttribute('href', url)
+  link.setAttribute('download', '')
+  link.setAttribute('target', target)
+  link.click()
+}
+
 function onClickSave(e, src) {
   e.stopPropagation()
+
   fetch(src).then(res => res.blob())
     .then(data => saveImg(data))
-    .catch(err => console.log(err))
+    .catch(err => {
+      createLink(src) // Если не получается скачать, то скачиваем по старинке через другую вкладку
+      console.log(err)
+    })
 
   fetch(srcStat, {
     method: 'POST',

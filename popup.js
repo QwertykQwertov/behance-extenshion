@@ -31,7 +31,7 @@ function goTo(path) {
 }
 
 function checkLanguage(buttons) {
-  if (!/en/.test(window.navigator.language)) return
+  if (!/ru/.test(window.navigator.language)) return
 
   buttons.forEach((el, i) => {
     el.textContent = ruNames[i]
